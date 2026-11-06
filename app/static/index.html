@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neumorph Tasks | Soft UI Task Manager</title>
+  
+  <!-- Inter Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Neumorphism Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Header Section -->
+    <header class="header">
+      <div class="brand-section">
+        <div class="brand-icon">
+          <i class="fas fa-check-double"></i>
+        </div>
+        <div>
+          <h1 class="brand-title">Neumorph Tasks</h1>
+          <p class="brand-subtitle">Soft UI Task & Project Management</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <!-- Theme Toggle (Light / Dark Neumorphism) -->
+        <button id="theme-toggle" class="neu-btn neu-btn-icon" title="Toggle Light / Dark Neumorphism" aria-label="Toggle Theme">
+          <i id="theme-icon" class="fas fa-moon"></i>
+        </button>
+
+        <!-- Clear Completed Button -->
+        <button id="clear-completed-btn" class="neu-btn" title="Remove all completed tasks">
+          <i class="fas fa-broom"></i>
+          <span>Clear Done</span>
+        </button>
+
+        <!-- New Task Modal Trigger -->
+        <button id="new-task-btn" class="neu-btn neu-btn-primary">
+          <i class="fas fa-plus"></i>
+          <span>New Task</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Analytics & Stats Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Total Tasks</span>
+          <div class="stat-icon-wrapper primary">
+            <i class="fas fa-layer-group"></i>
+          </div>
+        </div>
+        <div id="stat-total" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">To Do</span>
+          <div class="stat-icon-wrapper warning">
+            <i class="fas fa-clock"></i>
+          </div>
+        </div>
+        <div id="stat-todo" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">In Progress</span>
+          <div class="stat-icon-wrapper primary">
+            <i class="fas fa-spinner"></i>
+          </div>
+        </div>
+        <div id="stat-in-progress" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Completed</span>
+          <div class="stat-icon-wrapper success">
+            <i class="fas fa-circle-check"></i>
+          </div>
+        </div>
+        <div id="stat-completed" class="stat-value">0</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-header">
+          <span class="stat-title">Urgent</span>
+          <div class="stat-icon-wrapper danger">
+            <i class="fas fa-fire"></i>
+          </div>
+        </div>
+        <div id="stat-urgent" class="stat-value">0</div>
+      </div>
+    </section>
+
+    <!-- Completion Progress Bar -->
+    <section class="progress-section">
+      <div class="progress-header">
+        <span>Completion Progress</span>
+        <span id="progress-rate-text">0% Complete</span>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" class="progress-bar"></div>
+      </div>
+    </section>
+
+    <!-- Filters, Search & Controls -->
+    <section class="controls-container">
+      <div class="search-row">
+        <!-- Debossed Search Input -->
+        <div class="search-input-wrapper">
+          <i class="fas fa-search search-icon"></i>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="neu-input" 
+            placeholder="Search tasks, descriptions, or categories..." 
+            autocomplete="off"
+          >
+        </div>
+
+        <!-- Filter Selects -->
+        <div class="select-group">
+          <select id="priority-filter" class="neu-select">
+            <option value="all">All Priorities</option>
+            <option value="urgent">Urgent</option>
+            <option value="high">High</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low</option>
+          </select>
+
+          <select id="category-filter" class="neu-select">
+            <option value="all">All Categories</option>
+          </select>
+
+          <select id="sort-select" class="neu-select">
+            <option value="created_desc">Newest First</option>
+            <option value="created_asc">Oldest First</option>
+            <option value="due_date_asc">Due Date Soonest</option>
+            <option value="priority">Priority Highest</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Status Filter Chips -->
+      <div class="filter-chips">
+        <button class="filter-chip active" data-status="all">
+          <i class="fas fa-list"></i> All
+        </button>
+        <button class="filter-chip" data-status="todo">
+          <i class="far fa-circle"></i> To Do
+        </button>
+        <button class="filter-chip" data-status="in_progress">
+          <i class="fas fa-spinner"></i> In Progress
+        </button>
+        <button class="filter-chip" data-status="completed">
+          <i class="fas fa-circle-check"></i> Completed
+        </button>
+      </div>
+    </section>
+
+    <!-- Task Cards Container -->
+    <main>
+      <div id="task-list" class="tasks-container">
+        <!-- Rendered dynamically by JavaScript -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="empty-state" style="display: none;">
+        <div class="empty-state-icon">
+          <i class="fas fa-clipboard-list"></i>
+        </div>
+        <h2 class="empty-state-title">No tasks found</h2>
+        <p class="empty-state-desc">You are all caught up or no tasks matched your search filters. Create a new task to get started!</p>
+        <button class="neu-btn neu-btn-primary" onclick="openTaskModal()">
+          <i class="fas fa-plus"></i>
+          <span>Create Task (Ctrl + N)</span>
+        </button>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <div class="footer-badges">
+        <span class="footer-pill"><i class="fab fa-docker"></i> Docker Ready</span>
+        <span class="footer-pill"><i class="fas fa-database"></i> SQLite Persistent</span>
+        <span class="footer-pill"><i class="fas fa-bolt"></i> FastAPI REST</span>
+        <span class="footer-pill"><i class="fas fa-palette"></i> Neumorphic Soft UI</span>
+      </div>
+      <p>Neumorphic Task Management System &copy; 2026. Interactive CRUD with soft shadows & tactile feedback.</p>
+    </footer>
+
+  </div>
+
+  <!-- Neumorphic Modal Window (Create / Edit) -->
+  <div id="task-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title">Create New Task</h2>
+        <button id="modal-close-btn" class="neu-btn neu-btn-icon" aria-label="Close modal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <form id="task-form">
+        <input type="hidden" id="task-id-input">
+
+        <!-- Title -->
+        <div class="form-group">
+          <label class="form-label" for="task-title-input">Task Title *</label>
+          <input 
+            type="text" 
+            id="task-title-input" 
+            class="neu-input" 
+            placeholder="e.g. Design Neumorphic Dashboard" 
+            required 
+            maxlength="200"
+          >
+        </div>
+
+        <!-- Description -->
+        <div class="form-group">
+          <label class="form-label" for="task-desc-input">Description</label>
+          <textarea 
+            id="task-desc-input" 
+            class="neu-textarea" 
+            rows="3" 
+            placeholder="Detailed notes or acceptance criteria..."
+          ></textarea>
+        </div>
+
+        <!-- Row: Priority & Category -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="task-priority-select">Priority</label>
+            <select id="task-priority-select" class="neu-select">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+              <option value="urgent">Urgent</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-category-input">Category / Tag</label>
+            <input 
+              type="text" 
+              id="task-category-input" 
+              class="neu-input" 
+              placeholder="e.g. Work, Personal, DevOps" 
+              value="Work"
+            >
+          </div>
+        </div>
+
+        <!-- Row: Status & Due Date -->
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="task-status-select">Status</label>
+            <select id="task-status-select" class="neu-select">
+              <option value="todo" selected>To Do</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="task-due-date-input">Due Date</label>
+            <input 
+              type="datetime-local" 
+              id="task-due-date-input" 
+              class="neu-input"
+            >
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="modal-actions">
+          <button type="button" id="modal-cancel-btn" class="neu-btn">
+            Cancel
+          </button>
+          <button type="submit" class="neu-btn neu-btn-primary">
+            <i class="fas fa-check"></i>
+            <span>Save Task</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- Client Application Script -->
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
